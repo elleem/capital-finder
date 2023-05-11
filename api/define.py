@@ -13,15 +13,28 @@ class handler(BaseHTTPRequestHandler):
         dictionary_api_url = "https://restcountries.com/v3.1/name/"
 
         # print(dictionary)
+
+        if 'country' in dictionary and 'capital' in dictionary:
+            country_name = dictionary['country']
+            capital_name = dictionary['capital']
+            response = requests.get(dictionary_api_url + country_name)
+            data = response. json()
+
+            if response.status_code == 200 and 'capital' in data[0] and data[0]['capital'][0] == capital_name:
+                message = f"The query was a correct match for {country_name} and {capital_name}."
+            else:
+                message = f"The query was not a match."
+
         if 'country' in dictionary:
 
             response = requests.get(dictionary_api_url + dictionary["country"])
             data = response.json()
-            capital = data[0]['capital'][0]
-            message = f"The capital of {dictionary['country']} is {capital}"
+            capital_list = ", ".join(data[0]['capital'])
+            message = f"The capital(s) of {dictionary['country']} is/are {capital_list}"
 
         elif 'capital' in dictionary:
-            
+
+            dictionary_api_url ="https://restcountries.com/v3.1/capital/"
             response = requests.get(dictionary_api_url + dictionary["capital"])
             data = response.json()
             country = data[0]['name']['common']
@@ -43,8 +56,8 @@ class handler(BaseHTTPRequestHandler):
 
 
 
-if __name__ == '__main__':
-    server_address = ('localhost', 8000)  # use any available port
-    httpd = HTTPServer(server_address, handler)  # httpd is a commonly used abbreviation for "HTTP Daemon"
-    print(f'Starting httpd server on {server_address[0]}:{server_address[1]}')
-    httpd.serve_forever()
+# if __name__ == '__main__':
+#     server_address = ('localhost', 8000)  # use any available port
+#     httpd = HTTPServer(server_address, handler)  # httpd is a commonly used abbreviation for "HTTP Daemon"
+#     print(f'Starting httpd server on {server_address[0]}:{server_address[1]}')
+#     httpd.serve_forever()
