@@ -20,12 +20,12 @@ class handler(BaseHTTPRequestHandler):
             response = requests.get(dictionary_api_url + country_name)
             data = response. json()
 
-            if response.status_code == 200 and 'capital' in data[0] and data[0]['capital'][0] == capital_name:
+            if response.status_code == 200 and 'capital' in data[0] and capital_name in data[0]['capital']:
                 message = f"The query was a correct match for {country_name} and {capital_name}."
             else:
                 message = f"The query was not a match."
 
-        if 'country' in dictionary:
+        elif 'country' in dictionary:
 
             response = requests.get(dictionary_api_url + dictionary["country"])
             data = response.json()
@@ -38,7 +38,7 @@ class handler(BaseHTTPRequestHandler):
             response = requests.get(dictionary_api_url + dictionary["capital"])
             data = response.json()
             country = data[0]['name']['common']
-            message = f"The capital of {dictionary['capital']} is {country}"
+            message = f"The country of {dictionary['capital']} is {country}"
 
         else:
             message = "Invalid request, please try another request"
@@ -48,14 +48,14 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(message.encode())
 
+        return
 
 
 
 
 
 
-
-
+#
 # if __name__ == '__main__':
 #     server_address = ('localhost', 8000)  # use any available port
 #     httpd = HTTPServer(server_address, handler)  # httpd is a commonly used abbreviation for "HTTP Daemon"
